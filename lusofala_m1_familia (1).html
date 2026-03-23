@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Família e as Relações Sociais — Lusofala©</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Lato',sans-serif;background:#f7f5ef;color:#2c2c2a;min-height:100vh;padding:1.5rem 1rem 4rem}
+#app{max-width:800px;margin:0 auto}
+.app-header{text-align:center;margin-bottom:1.5rem}
+.app-brand{font-size:.75rem;font-weight:700;color:#1a5c1a;letter-spacing:.08em;margin-bottom:.2rem}
+.app-title{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:700;color:#2c2c2a;margin-bottom:.2rem}
+.app-sub{font-size:.82rem;color:#888780;font-style:italic}
+.prog-wrap{background:#fff;border:1px solid #d3d1c7;border-radius:12px;padding:.6rem 1.2rem;margin-bottom:1.4rem;display:flex;justify-content:space-between;align-items:center;font-size:.84rem;color:#5f5e5a}
+.prog-wrap strong{color:#2c2c2a}
+.prog-dots{display:flex;gap:6px}
+.prog-dot{width:10px;height:10px;border-radius:50%;background:#d3d1c7;transition:background .2s}
+.prog-dot.done{background:#3B6D11}.prog-dot.active{background:#993556}
+.act-card{background:#fff;border:1px solid #d3d1c7;border-radius:14px;padding:1.4rem 1.5rem;margin-bottom:1rem;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.act-badge{display:inline-block;padding:.18rem .65rem;border-radius:20px;font-size:.7rem;font-weight:700;margin-bottom:.7rem;letter-spacing:.04em}
+.act-title{font-size:1rem;font-weight:700;color:#2c2c2a;margin-bottom:.35rem}
+.act-inst{font-size:.86rem;color:#5f5e5a;line-height:1.55;margin-bottom:1rem;border-left:3px solid #d3d1c7;padding-left:.8rem}
+.btn{display:inline-block;padding:.5rem 1.3rem;border-radius:8px;border:1.5px solid #b4b2a9;font-size:.88rem;font-weight:700;cursor:pointer;background:#fff;color:#2c2c2a;transition:all .15s;font-family:'Lato',sans-serif}
+.btn:hover{background:#f1efe8}
+.btn.primary{background:#993556;color:#fff;border-color:#72243E}
+.btn.primary:hover{background:#72243E}
+.btn-row{display:flex;gap:.6rem;margin-top:1rem;flex-wrap:wrap;align-items:center}
+.feedback{font-size:.84rem;min-height:1.4rem;margin:.5rem 0 .2rem;font-style:italic;padding:.4rem .7rem;border-radius:6px}
+.feedback.ok{background:#eaf3de;color:#27500A}
+.feedback.err{background:#fcebeb;color:#A32D2D}
+.feedback.info{background:#e6f1fb;color:#0c447c}
+/* A1 */
+.word-bank{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:1rem;padding:.7rem .9rem;background:#f7f5ef;border-radius:10px;border:1px solid #d3d1c7;min-height:48px}
+.word-chip{padding:.25rem .75rem;border-radius:20px;border:1.5px solid #993556;background:#FBEAF0;color:#72243E;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .15s;user-select:none}
+.word-chip:hover{background:#f4c0d1}.word-chip.used{opacity:.28;pointer-events:none}.word-chip.selected{background:#993556;color:#fff;border-color:#72243E}
+.blank{display:inline-block;min-width:110px;border-bottom:2px solid #b4b2a9;padding:0 6px;text-align:center;cursor:pointer;font-weight:700;color:transparent;background:#f1efe8;border-radius:4px;margin:0 4px;transition:all .2s;vertical-align:bottom}
+.blank.filled{color:#2c2c2a;border-color:#993556;background:#FBEAF0}
+.blank.correct{color:#27500A;border-color:#3B6D11;background:#eaf3de;pointer-events:none}
+.blank.wrong{color:#A32D2D;border-color:#A32D2D;background:#fcebeb}
+/* A2 */
+.intrus-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.5rem;margin-bottom:.8rem}
+.intrus-btn{padding:.55rem .6rem;border-radius:10px;border:1.5px solid #d3d1c7;background:#fff;color:#2c2c2a;font-size:.86rem;text-align:center;cursor:pointer;transition:all .18s;font-family:'Lato',sans-serif;font-weight:500}
+.intrus-btn:hover{border-color:#BA7517;background:#FAEEDA}
+.intrus-btn.correct{background:#eaf3de;border-color:#3B6D11;color:#27500A;pointer-events:none}
+.intrus-btn.wrong{background:#fcebeb;border-color:#A32D2D;color:#A32D2D}
+.intrus-group{margin-bottom:1.2rem;padding:.9rem 1rem;background:#f7f5ef;border-radius:10px;border:1px solid #d3d1c7}
+.intrus-label{font-size:.78rem;font-weight:700;color:#888780;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.6rem}
+/* A3 */
+.corrige-item{margin-bottom:1rem;padding:.9rem 1rem;background:#f7f5ef;border-radius:10px;border:1px solid #d3d1c7}
+.corrige-errada{font-size:.9rem;color:#2c2c2a;margin-bottom:.6rem;line-height:1.6}
+.corrige-errada .err-word{font-weight:700;text-decoration:line-through;background:#fcebeb;color:#A32D2D;padding:1px 5px;border-radius:3px}
+.corrige-input{width:100%;padding:.4rem .75rem;border:1.5px solid #d3d1c7;border-radius:8px;font-size:.88rem;font-family:'Lato',sans-serif;background:#fff;color:#2c2c2a;transition:border-color .2s}
+.corrige-input:focus{outline:none;border-color:#993556}
+.corrige-input.ok{border-color:#3B6D11;background:#eaf3de;color:#27500A}
+.corrige-input.err{border-color:#A32D2D;background:#fcebeb;color:#A32D2D}
+.corrige-hint{font-size:.77rem;color:#888780;margin-top:.4rem;font-style:italic}
+/* A4 */
+.create-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.9rem}
+.create-sit{padding:.6rem .8rem;border-radius:8px;border:1.5px solid #d3d1c7;background:#fff;color:#2c2c2a;font-size:.82rem;text-align:left;cursor:pointer;transition:all .15s;font-family:'Lato',sans-serif;line-height:1.45}
+.create-sit:hover{background:#e6f1fb;border-color:#185FA5;color:#0c447c}
+.create-sit.active{background:#e6f1fb;border-color:#185FA5;color:#0c447c;font-weight:700}
+.create-textarea{width:100%;min-height:130px;padding:.7rem .9rem;border:1.5px solid #d3d1c7;border-radius:10px;font-size:.9rem;font-family:'Lato',sans-serif;color:#2c2c2a;background:#fff;resize:vertical;transition:border-color .2s;line-height:1.6}
+.create-textarea:focus{outline:none;border-color:#185FA5}
+.word-count{font-size:.76rem;color:#888780;margin-top:.3rem;text-align:right}
+.kw-bar{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.7rem}
+.kw-chip{padding:.18rem .6rem;border-radius:20px;border:1px solid #185FA5;background:#e6f1fb;color:#0c447c;font-size:.76rem;font-weight:700;cursor:pointer;transition:all .15s}
+.kw-chip:hover{background:#185FA5;color:#fff}
+.kw-chip.inserted{opacity:.35;pointer-events:none}
+/* A5 */
+.convo-scene{background:#f7f5ef;border-radius:10px;padding:.8rem 1rem;margin-bottom:.9rem;border:1px solid #d3d1c7;font-size:.86rem;color:#5f5e5a;line-height:1.55}
+.bubbles{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1rem}
+.bubble{max-width:78%;padding:.55rem .9rem;border-radius:14px;font-size:.88rem;line-height:1.5}
+.bubble.left{background:#FBEAF0;color:#2c2c2a;border-radius:4px 14px 14px 14px;align-self:flex-start;border:1px solid #F4C0D1}
+.bubble.right{background:#eaf3de;color:#2c2c2a;border-radius:14px 4px 14px 14px;align-self:flex-end;border:1px solid #C0DD97}
+.bubble .who{font-size:.7rem;font-weight:700;color:#888780;margin-bottom:2px}
+.choices{display:flex;flex-direction:column;gap:.4rem}
+.choice-q{font-size:.82rem;font-weight:700;color:#888780;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem}
+.choice-btn{padding:.5rem .9rem;border-radius:10px;border:1.5px solid #d3d1c7;background:#fff;color:#2c2c2a;font-size:.87rem;text-align:left;cursor:pointer;transition:all .15s;font-family:'Lato',sans-serif;line-height:1.45}
+.choice-btn:hover{border-color:#993556;background:#FBEAF0}
+.choice-btn.correct{background:#eaf3de;border-color:#3B6D11;color:#27500A;pointer-events:none}
+.choice-btn.wrong{background:#fcebeb;border-color:#A32D2D;color:#A32D2D;pointer-events:none}
+/* Resultado */
+.result-card{background:#fff;border:1px solid #d3d1c7;border-radius:14px;padding:2rem 1.5rem;text-align:center}
+.result-score{font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;color:#2c2c2a;margin-bottom:.3rem}
+.result-msg{font-size:.95rem;color:#5f5e5a;margin-bottom:1.5rem}
+.result-grid{display:flex;justify-content:center;gap:.7rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.result-item{background:#f7f5ef;border-radius:10px;padding:.6rem 1rem;font-size:.8rem;color:#5f5e5a;min-width:100px;text-align:center}
+.result-item strong{display:block;font-size:1.1rem;color:#2c2c2a;margin-bottom:2px}
+.reflexao{background:#f7f5ef;border-radius:10px;padding:.9rem 1.1rem;font-size:.85rem;color:#5f5e5a;line-height:1.6;text-align:left;max-width:520px;margin:0 auto 1.5rem}
+.reflexao strong{color:#2c2c2a}
+#fase1,#fase2,#fase3,#fase4,#fase5,#resultado{display:none}
+</style>
+</head>
+<body>
+<div id="app">
+<div class="app-header">
+  <div class="app-brand">Lusofala©</div>
+  <div class="app-title">A Família e as Relações Sociais</div>
+  <div class="app-sub">Módulo 1 — 5 atividades interativas — Nível B1</div>
+</div>
+<div class="prog-wrap">
+  <div>Atividade <strong id="num-fase">1</strong> de 5</div>
+  <div class="prog-dots" id="prog-dots"></div>
+  <div>Pontos: <strong id="pontos">0</strong></div>
+</div>
+
+<!-- A1 -->
+<div id="fase1">
+<div class="act-card">
+  <div class="act-badge" style="background:#FBEAF0;color:#72243E">Atividade 1 — Complete a frase</div>
+  <div class="act-title">Escolha a palavra certa</div>
+  <div class="act-inst">Selecione uma palavra do banco e clique na lacuna correspondente para completar cada frase.</div>
+  <div class="word-bank" id="banco1"></div>
+  <div id="frases1" style="display:flex;flex-direction:column;gap:.8rem"></div>
+  <div class="feedback" id="fb1"></div>
+  <div class="btn-row"><button class="btn primary" id="btn1" onclick="verificarA1()">Verificar →</button></div>
+</div>
+</div>
+
+<!-- A2 -->
+<div id="fase2">
+<div class="act-card">
+  <div class="act-badge" style="background:#FAEEDA;color:#633806">Atividade 2 — Encontre o intruso</div>
+  <div class="act-title">Qual palavra não pertence ao grupo?</div>
+  <div class="act-inst">Em cada grupo, uma palavra não tem relação com as outras. Clique no intruso e leia a explicação!</div>
+  <div id="intrus-grupos"></div>
+  <div class="feedback" id="fb2"></div>
+  <div class="btn-row"><button class="btn primary" id="btn2" onclick="verificarA2()">Verificar →</button></div>
+</div>
+</div>
+
+<!-- A3 -->
+<div id="fase3">
+<div class="act-card">
+  <div class="act-badge" style="background:#eaf3de;color:#27500A">Atividade 3 — Corrija a frase</div>
+  <div class="act-title">Encontre e corrija o erro</div>
+  <div class="act-inst">Cada frase contém <strong>um erro</strong> (em destaque). Escreva a palavra ou expressão correta na caixa.</div>
+  <div id="corrige-lista"></div>
+  <div class="feedback" id="fb3"></div>
+  <div class="btn-row"><button class="btn primary" id="btn3" onclick="verificarA3()">Verificar →</button></div>
+</div>
+</div>
+
+<!-- A4 -->
+<div id="fase4">
+<div class="act-card">
+  <div class="act-badge" style="background:#e6f1fb;color:#0c447c">Atividade 4 — Produza um texto</div>
+  <div class="act-title">Escreva sobre a família</div>
+  <div class="act-inst">Escolha uma situação e escreva um pequeno texto (40 a 60 palavras). Use as palavras-chave sugeridas. Não há uma única resposta correta!</div>
+  <div class="create-grid" id="create-grid"></div>
+  <div style="font-size:.82rem;color:#5f5e5a;margin-bottom:.5rem">Clique nas palavras-chave para as inserir no texto:</div>
+  <div class="kw-bar" id="kw-bar"></div>
+  <textarea class="create-textarea" id="texto-livre" placeholder="Escreva aqui o seu texto..." oninput="updateWC()"></textarea>
+  <div class="word-count" id="wc">0 palavras</div>
+  <div class="feedback" id="fb4"></div>
+  <div class="btn-row"><button class="btn primary" id="btn4" onclick="verificarA4()">Continuar →</button></div>
+</div>
+</div>
+
+<!-- A5 -->
+<div id="fase5">
+<div class="act-card">
+  <div class="act-badge" style="background:#f1efe8;color:#5F5E5A">Atividade 5 — Diálogo interativo</div>
+  <div class="act-title">Complete o diálogo</div>
+  <div class="act-inst">Leia a situação e escolha a resposta mais adequada em cada momento do diálogo.</div>
+  <div class="convo-scene" id="convo-scene"></div>
+  <div class="bubbles" id="bubbles"></div>
+  <div class="choices" id="choices"></div>
+  <div class="feedback" id="fb5"></div>
+</div>
+</div>
+
+<!-- RESULTADO -->
+<div id="resultado">
+<div class="result-card">
+  <div class="result-score" id="res-score"></div>
+  <div class="result-msg" id="res-msg"></div>
+  <div class="result-grid" id="res-grid"></div>
+  <div class="reflexao"><strong>Para ir mais longe:</strong><br>Descreva a sua própria família em português! Use as estruturas: <em>"Na minha família, nós somos… Eu tenho… O meu/A minha … se chama… Nos fins de semana, nós…"</em></div>
+  <button class="btn primary" onclick="reiniciar()">Jogar novamente</button>
+</div>
+</div>
+</div>
+
+<script>
+var pontos=0,scores=['—','—','—','—','—'],palavraSel=null;
+var a2Resp={},a5Step=0,a5Ok=0,a5Hist=[];
+
+var A1W=['cotidiano','laços afetivos','vovó','nuclear','padrinho','afetuosas','aperto de mão','valeu'];
+var A1F=[
+  {a:'A família ',b:'nuclear',d:' é formada pelos pais e pelos filhos.'},
+  {a:'No Brasil, os avós participam ativamente do ',b:'cotidiano',d:' das crianças.'},
+  {a:'As crianças brasileiras chamam a avó de "',b:'vovó',d:'" de forma carinhosa.'},
+  {a:'Os brasileiros são conhecidos por ser muito ',b:'afetuosas',d:' no contato social.'},
+  {a:'Entre homens, o ',b:'aperto de mão',d:' é uma forma comum de cumprimento.'},
+  {a:'Os ',b:'laços afetivos',d:' com amigos e parentes são muito valorizados no Brasil.'},
+];
+
+var A2G=[
+  {l:'Membros da família',it:['o pai','a mãe','o vizinho','o irmão','o avô'],x:'o vizinho',e:'O vizinho não é membro da família — é uma pessoa que mora perto.'},
+  {l:'Formas de cumprimento',it:['o abraço','o beijo','o aperto de mão','o churrasco','o aceno'],x:'o churrasco',e:'O churrasco é uma refeição social, não uma forma de cumprimento.'},
+  {l:'Registro informal',it:['"Oi!"','"Valeu!"','"E aí?"','"Com licença"','"Tchau!"'],x:'"Com licença"',e:'"Com licença" é uma expressão formal, usada em situações educadas — não é informal.'},
+  {l:'Sentimentos afetivos',it:['o carinho','o afeto','o documento','o abraço','o laço'],x:'o documento',e:'Documento é um objeto; os outros são sentimentos e gestos afetivos.'},
+];
+
+var A3F=[
+  {er:'Para falar com a professora, devo usar <span class="err-word">você</span> — é mais respeitoso.',ew:'você',ok:'o senhor / a senhora',d:'No registro formal, usa-se "o senhor" (m.) ou "a senhora" (f.) para mostrar respeito.'},
+  {er:'Em português do Brasil, o primo é chamado de <span class="err-word">le cousin</span>.',ew:'le cousin',ok:'o primo',d:'"Le cousin" é francês. Em português: "o primo" (m.) ou "a prima" (f.).'},
+  {er:'"<span class="err-word">Obrigado</span>!" disse a Maria depois de receber o presente.',ew:'Obrigado',ok:'Obrigada',d:'Maria é mulher — o agradecimento concorda com o gênero de quem fala.'},
+  {er:'Meu melhor amigo é como um <span class="err-word">estranho</span> para mim — nos chamamos de irmão.',ew:'estranho',ok:'irmão',d:'Se ele é como um irmão, ele não pode ser um estranho! A frase correta seria "é como um irmão para mim".'},
+];
+
+var A4SITS=[
+  {i:'👨‍👩‍👧',t:'Apresente a sua família',d:'Descreva os membros da sua família com o vocabulário aprendido.'},
+  {i:'🤝',t:'Uma primeira visita',d:'Como você se apresentaria a uma família brasileira pela primeira vez?'},
+  {i:'💬',t:'Brasil vs França',d:'Compare os cumprimentos no Brasil e na França usando "enquanto que".'},
+  {i:'🍖',t:'O churrasco de domingo',d:'Descreva uma reunião de família brasileira típica.'},
+];
+var A4KW=['família','cumprimento','afeto','laços','cotidiano','vovô/vovó','afetuoso/a','abraço','registro','parentes'];
+
+var A5={
+  scene:'<strong>Situação:</strong> Julie, estudante francesa, chega à casa da família Oliveira em São Paulo para o seu primeiro churrasco de domingo.',
+  steps:[
+    {hist:[{w:'Sra. Oliveira',d:'left',m:'Oi, Julie! Bem-vinda! Que bom ter você aqui!'}],
+     q:'Como Julie responde ao cumprimento da Sra. Oliveira?',
+     ops:[
+      {t:'Boa tarde, senhora. Muito obrigada pelo convite!',ok:true,e:'Perfeito! Educado e adequado para uma primeira visita.'},
+      {t:'Ei! Tudo bom? Que legal!',ok:false,e:'Muito informal para uma primeira visita com uma pessoa mais velha.'},
+      {t:'Bonjour madame.',ok:false,e:'Julie deve falar em português — e "bonjour" é francês!'},
+    ]},
+    {hist:[{w:'Carlos (filho, 25 anos)',d:'left',m:'Oi Julie! Sou o Carlos. E aí, curtiu o Brasil até agora?'}],
+     q:'Carlos é jovem e descontraído. Como Julie responde?',
+     ops:[
+      {t:'Com licença, Carlos. O senhor é muito gentil.',ok:false,e:'"O senhor" é muito formal para falar com um jovem da mesma idade num contexto casual.'},
+      {t:'Oi Carlos! Sim, estou adorando! O Brasil é incrível!',ok:true,e:'Ótimo! Registro informal adequado com um jovem da mesma faixa etária.'},
+      {t:'Obrigada, senhor Carlos.',ok:false,e:'"Senhor Carlos" é muito formal para um jovem de 25 anos num churrasco.'},
+    ]},
+    {hist:[{w:'Vovó Oliveira (80 anos)',d:'left',m:'Ai que linda! Quer um brigadeiro, minha filha?'}],
+     q:'A vovó oferece doce a Julie. O que Julie responde?',
+     ops:[
+      {t:'Sim, por favor! Muito obrigada, vovó!',ok:true,e:'Perfeito! No Brasil, chamar a vovó de alguém de "vovó" é um sinal de carinho muito apreciado.'},
+      {t:'Não, obrigada. Eu não como açúcar.',ok:false,e:'Recusar diretamente pode parecer rude no contexto cultural brasileiro. Seria mais gentil aceitar ou explicar com delicadeza.'},
+      {t:'Com licença, senhora. Não, obrigada.',ok:false,e:'Muito formal! Com uma vovó afetuosa, um tom mais caloroso seria muito mais adequado.'},
+    ]},
+  ]
+};
+
+// ── INIT ──
+function init(){
+  var dots=document.getElementById('prog-dots');
+  dots.innerHTML='';
+  for(var i=1;i<=5;i++){var d=document.createElement('div');d.className='prog-dot'+(i===1?' active':'');d.id='dot'+i;dots.appendChild(d);}
+  buildA1();buildA2();buildA3();buildA4();
+  document.getElementById('convo-scene').innerHTML=A5.scene;
+  a5Step=0;a5Ok=0;a5Hist=[];renderA5();
+  show(1);
+}
+
+function show(n){
+  for(var i=1;i<=5;i++)document.getElementById('fase'+i).style.display='none';
+  document.getElementById('resultado').style.display='none';
+  if(n<=5)document.getElementById('fase'+n).style.display='block';
+  else document.getElementById('resultado').style.display='block';
+  document.getElementById('num-fase').textContent=Math.min(n,5);
+  document.getElementById('pontos').textContent=pontos;
+  for(var i=1;i<=5;i++){var d=document.getElementById('dot'+i);d.className='prog-dot'+(i<n?' done':i===n?' active':'');}
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── A1 ──
+function buildA1(){
+  var banco=document.getElementById('banco1');banco.innerHTML='';
+  A1W.forEach(function(w){
+    var c=document.createElement('span');c.className='word-chip';c.textContent=w;c.dataset.w=w;
+    c.onclick=function(){document.querySelectorAll('.word-chip').forEach(function(x){x.classList.remove('selected');});c.classList.add('selected');palavraSel=c;document.getElementById('fb1').textContent='';};
+    banco.appendChild(c);
+  });
+  var cont=document.getElementById('frases1');cont.innerHTML='';
+  A1F.forEach(function(f,i){
+    var div=document.createElement('div');
+    div.style.cssText='background:#f7f5ef;border-radius:10px;padding:.7rem .9rem;border:1px solid #d3d1c7;font-size:.92rem;line-height:2.2';
+    div.innerHTML=f.a+'<span class="blank" id="bl'+i+'" data-r="'+f.b+'" onclick="fillBlank(\'bl'+i+'\')">'+Array(12).join('&nbsp;')+'</span>'+f.d;
+    cont.appendChild(div);
+  });
+}
+function fillBlank(id){
+  if(!palavraSel){var fb=document.getElementById('fb1');fb.className='feedback info';fb.textContent='Selecione primeiro uma palavra do banco!';return;}
+  var bl=document.getElementById(id);
+  var prev=bl.dataset.de;
+  if(prev){var a=document.querySelector('.word-chip[data-w="'+prev+'"]');if(a){a.classList.remove('used');}}
+  bl.textContent=palavraSel.dataset.w;bl.className='blank filled';bl.dataset.de=palavraSel.dataset.w;
+  palavraSel.classList.add('used');palavraSel.classList.remove('selected');palavraSel=null;
+  document.getElementById('fb1').textContent='';
+}
+function verificarA1(){
+  var ok=0;
+  document.querySelectorAll('.blank').forEach(function(bl){
+    var v=bl.textContent.trim().replace(/\u00a0/g,'');
+    if(v===bl.dataset.r){bl.className='blank correct';ok++;}else{bl.className='blank wrong';}
+  });
+  var pts=ok*12;pontos+=pts;scores[0]=ok+'/'+A1F.length+' ('+pts+' pts)';
+  document.getElementById('pontos').textContent=pontos;
+  var fb=document.getElementById('fb1');
+  fb.className='feedback '+(ok===A1F.length?'ok':'info');
+  fb.textContent=ok+'/'+A1F.length+' corretas! +'+pts+' pts.';
+  var btn=document.getElementById('btn1');btn.textContent='Próxima atividade →';btn.onclick=function(){show(2);};
+}
+
+// ── A2 ──
+function buildA2(){
+  var cont=document.getElementById('intrus-grupos');cont.innerHTML='';
+  A2G.forEach(function(g,gi){
+    var div=document.createElement('div');div.className='intrus-group';
+    div.innerHTML='<div class="intrus-label">Grupo '+(gi+1)+' — '+g.l+'</div>';
+    var grid=document.createElement('div');grid.className='intrus-grid';
+    g.it.forEach(function(item){
+      var b=document.createElement('button');b.className='intrus-btn';b.textContent=item;b.dataset.gi=gi;b.dataset.item=item;
+      b.onclick=function(){clickIntrus(b,gi,item,g.x,g.exp||g.e,g.it);};
+      grid.appendChild(b);
+    });
+    div.appendChild(grid);
+    var exp=document.createElement('div');exp.id='ei'+gi;exp.style.cssText='font-size:.79rem;color:#5f5e5a;font-style:italic;margin-top:.4rem;display:none;';
+    div.appendChild(exp);
+    cont.appendChild(div);
+  });
+}
+function clickIntrus(el,gi,item,intruso,exp,all){
+  var btns=document.querySelectorAll('[data-gi="'+gi+'"]');
+  btns.forEach(function(b){b.style.pointerEvents='none';});
+  if(item===intruso){el.className='intrus-btn correct';a2Resp[gi]=true;}
+  else{el.className='intrus-btn wrong';a2Resp[gi]=false;btns.forEach(function(b){if(b.dataset.item===intruso)b.className='intrus-btn correct';});}
+  var e=document.getElementById('ei'+gi);if(e){e.textContent=exp;e.style.display='block';}
+}
+function verificarA2(){
+  var ok=0;A2G.forEach(function(_,i){if(a2Resp[i])ok++;});
+  var pts=ok*15;pontos+=pts;scores[1]=ok+'/'+A2G.length+' ('+pts+' pts)';
+  document.getElementById('pontos').textContent=pontos;
+  var fb=document.getElementById('fb2');fb.className='feedback '+(ok===A2G.length?'ok':'info');
+  fb.textContent=ok+'/'+A2G.length+' grupos corretos! +'+pts+' pts.';
+  var btn=document.getElementById('btn2');btn.textContent='Próxima atividade →';btn.onclick=function(){show(3);};
+}
+
+// ── A3 ──
+function buildA3(){
+  var cont=document.getElementById('corrige-lista');cont.innerHTML='';
+  A3F.forEach(function(f,i){
+    var div=document.createElement('div');div.className='corrige-item';
+    div.innerHTML='<div class="corrige-errada">'+f.er+'</div>'
+      +'<input type="text" class="corrige-input" id="ci'+i+'" placeholder="Escreva a versão correta...">'
+      +'<div class="corrige-hint" id="hi'+i+'"></div>';
+    cont.appendChild(div);
+  });
+}
+function verificarA3(){
+  var ok=0;
+  A3F.forEach(function(f,i){
+    var inp=document.getElementById('ci'+i);
+    var v=inp.value.trim().toLowerCase();
+    var corretas=f.ok.toLowerCase().split('/').map(function(s){return s.trim();});
+    var bon=corretas.some(function(c){return v===c;});
+    inp.className='corrige-input '+(bon?'ok':'err');
+    var h=document.getElementById('hi'+i);
+    h.textContent=bon?'✓ Correto!':'✗ Resposta esperada: "'+f.ok+'" — '+f.d;
+    h.style.color=bon?'#27500A':'#A32D2D';
+    if(bon)ok++;
+  });
+  var pts=ok*15;pontos+=pts;scores[2]=ok+'/'+A3F.length+' ('+pts+' pts)';
+  document.getElementById('pontos').textContent=pontos;
+  var fb=document.getElementById('fb3');fb.className='feedback '+(ok===A3F.length?'ok':'info');
+  fb.textContent=ok+'/'+A3F.length+' corretas! +'+pts+' pts.';
+  var btn=document.getElementById('btn3');btn.textContent='Próxima atividade →';btn.onclick=function(){show(4);};
+}
+
+// ── A4 ──
+function buildA4(){
+  var g=document.getElementById('create-grid');g.innerHTML='';
+  A4SITS.forEach(function(s,i){
+    var b=document.createElement('button');b.className='create-sit';
+    b.innerHTML='<span style="font-size:16px">'+s.i+'</span> <strong>'+s.t+'</strong><br><span style="font-size:.78rem;opacity:.75">'+s.d+'</span>';
+    b.onclick=function(){document.querySelectorAll('.create-sit').forEach(function(x){x.classList.remove('active');});b.classList.add('active');document.getElementById('texto-livre').placeholder='Escreva sobre: '+s.t+'...';};
+    g.appendChild(b);
+  });
+  var bar=document.getElementById('kw-bar');bar.innerHTML='';
+  A4KW.forEach(function(kw){
+    var c=document.createElement('span');c.className='kw-chip';c.textContent=kw;
+    c.onclick=function(){
+      if(c.classList.contains('inserted'))return;
+      var ta=document.getElementById('texto-livre');var v=ta.value;var p=ta.selectionStart;
+      ta.value=v.slice(0,p)+kw+' '+v.slice(p);ta.focus();c.classList.add('inserted');updateWC();
+    };
+    bar.appendChild(c);
+  });
+}
+function updateWC(){
+  var v=document.getElementById('texto-livre').value.trim();
+  var n=v?v.split(/\s+/).length:0;
+  var el=document.getElementById('wc');el.textContent=n+' palavras';
+  el.style.color=n>=40&&n<=70?'#27500A':n>0?'#BA7517':'#888780';
+}
+function verificarA4(){
+  var v=document.getElementById('texto-livre').value.trim();
+  var n=v?v.split(/\s+/).length:0;
+  if(n<15){var fb=document.getElementById('fb4');fb.className='feedback err';fb.textContent='Escreva pelo menos 15 palavras para continuar.';return;}
+  var pts=n>=40?25:n>=25?15:8;pontos+=pts;scores[3]=n+' palavras (+'+pts+' pts)';
+  document.getElementById('pontos').textContent=pontos;
+  var fb=document.getElementById('fb4');fb.className='feedback ok';fb.textContent='Texto registrado com '+n+' palavras. +'+pts+' pts!';
+  var btn=document.getElementById('btn4');btn.textContent='Próxima atividade →';btn.onclick=function(){show(5);};
+}
+
+// ── A5 ──
+function renderA5(){
+  if(a5Step>=A5.steps.length){
+    var pts=a5Ok*15;pontos+=pts;scores[4]=a5Ok+'/'+A5.steps.length+' ('+pts+' pts)';
+    document.getElementById('pontos').textContent=pontos;
+    var fb=document.getElementById('fb5');fb.className='feedback ok';
+    fb.textContent='Diálogo concluído! '+a5Ok+'/'+A5.steps.length+' corretas. +'+pts+' pts!';
+    setTimeout(showResult,1800);return;
+  }
+  var step=A5.steps[a5Step];
+  var bw=document.getElementById('bubbles');bw.innerHTML='';
+  // histórico acumulado
+  a5Hist.forEach(function(b){appendBubble(bw,b);});
+  step.hist.forEach(function(b){appendBubble(bw,b);});
+  var cw=document.getElementById('choices');cw.innerHTML='<div class="choice-q">'+step.q+'</div>';
+  step.ops.forEach(function(op){
+    var b=document.createElement('button');b.className='choice-btn';b.textContent=op.t;
+    b.onclick=function(){pickOp(op,b,step.ops,step.hist);};
+    cw.appendChild(b);
+  });
+  document.getElementById('fb5').textContent='';
+}
+function appendBubble(wrap,b){
+  var div=document.createElement('div');div.className='bubble '+b.d;
+  div.innerHTML='<div class="who">'+b.w+'</div>'+b.m;
+  wrap.appendChild(div);
+}
+function pickOp(op,el,ops,hist){
+  document.querySelectorAll('.choice-btn').forEach(function(b){b.style.pointerEvents='none';});
+  el.className='choice-btn '+(op.ok?'correct':'wrong');
+  if(!op.ok)ops.forEach(function(o){if(o.ok)document.querySelectorAll('.choice-btn').forEach(function(b){if(b.textContent===o.t)b.className='choice-btn correct';});});
+  var fb=document.getElementById('fb5');fb.className='feedback '+(op.ok?'ok':'err');fb.textContent=(op.ok?'✓ ':'✗ ')+op.e;
+  if(op.ok){a5Ok++;hist.forEach(function(b){a5Hist.push(b);});a5Hist.push({w:'Julie',d:'right',m:op.t});}
+  a5Step++;setTimeout(function(){renderA5();},2000);
+}
+
+// ── RESULTADO ──
+function showResult(){
+  var total=A1F.length*12+A2G.length*15+A3F.length*15+25+A5.steps.length*15;
+  var pct=Math.round((pontos/total)*100);
+  document.getElementById('res-score').textContent=pontos+' pts ('+pct+'%)';
+  var msgs=['Continue praticando — você está no caminho certo!','Bom trabalho! Revise os pontos que precisam de atenção.','Muito bem! O seu vocabulário está evoluindo!','Excelente! Você domina a família e as relações sociais no Brasil!'];
+  document.getElementById('res-msg').textContent=msgs[pct>=85?3:pct>=65?2:pct>=45?1:0];
+  var grid=document.getElementById('res-grid');grid.innerHTML='';
+  var labs=['Completar frases','Intruso','Corrigir','Produção escrita','Diálogo'];
+  scores.forEach(function(s,i){var d=document.createElement('div');d.className='result-item';d.innerHTML='<strong>'+s+'</strong>'+labs[i];grid.appendChild(d);});
+  show(6);
+}
+
+function reiniciar(){
+  pontos=0;scores=['—','—','—','—','—'];palavraSel=null;a2Resp={};a5Step=0;a5Ok=0;a5Hist=[];
+  document.getElementById('texto-livre').value='';document.getElementById('wc').textContent='0 palavras';
+  buildA1();buildA2();buildA3();buildA4();
+  document.getElementById('convo-scene').innerHTML=A5.scene;
+  renderA5();init();
+}
+
+init();
+</script>
+</body>
+</html>

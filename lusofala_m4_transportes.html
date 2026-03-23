@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Os Transportes e a Cidade — Lusofala©</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Lato',sans-serif;background:#f0f4fa;color:#2c2c2a;min-height:100vh;padding:1.5rem 1rem 4rem}
+#app{max-width:800px;margin:0 auto}
+.app-header{text-align:center;margin-bottom:1.5rem}
+.app-brand{font-size:.75rem;font-weight:700;color:#1a5c1a;letter-spacing:.08em;margin-bottom:.2rem}
+.app-title{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:700;color:#2c2c2a;margin-bottom:.2rem}
+.app-sub{font-size:.82rem;color:#888780;font-style:italic}
+.prog-wrap{background:#fff;border:1px solid #d3d1c7;border-radius:12px;padding:.6rem 1.2rem;margin-bottom:1.4rem;display:flex;justify-content:space-between;align-items:center;font-size:.84rem;color:#5f5e5a}
+.prog-wrap strong{color:#2c2c2a}
+.prog-dots{display:flex;gap:6px}
+.prog-dot{width:10px;height:10px;border-radius:50%;background:#d3d1c7;transition:background .2s}
+.prog-dot.done{background:#3B6D11}.prog-dot.active{background:#185FA5}
+.act-card{background:#fff;border:1px solid #d3d1c7;border-radius:14px;padding:1.4rem 1.5rem;margin-bottom:1rem;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.act-badge{display:inline-block;padding:.18rem .65rem;border-radius:20px;font-size:.7rem;font-weight:700;margin-bottom:.7rem;letter-spacing:.04em}
+.act-title{font-size:1rem;font-weight:700;color:#2c2c2a;margin-bottom:.35rem}
+.act-inst{font-size:.86rem;color:#5f5e5a;line-height:1.55;margin-bottom:1rem;border-left:3px solid #d3d1c7;padding-left:.8rem}
+.btn{display:inline-block;padding:.5rem 1.3rem;border-radius:8px;border:1.5px solid #b4b2a9;font-size:.88rem;font-weight:700;cursor:pointer;background:#fff;color:#2c2c2a;transition:all .15s;font-family:'Lato',sans-serif}
+.btn:hover{background:#f1efe8}
+.btn.primary{background:#185FA5;color:#fff;border-color:#0c447c}
+.btn.primary:hover{background:#0c447c}
+.btn-row{display:flex;gap:.6rem;margin-top:1rem;flex-wrap:wrap;align-items:center}
+.feedback{font-size:.84rem;min-height:1.4rem;margin:.5rem 0 .2rem;font-style:italic;padding:.4rem .7rem;border-radius:6px}
+.feedback.ok{background:#eaf3de;color:#27500A}
+.feedback.err{background:#fcebeb;color:#A32D2D}
+.feedback.info{background:#e6f1fb;color:#0c447c}
+
+/* A1 — GPS / Selecione a instrução correta */
+.gps-step{background:#f7f5ef;border:1px solid #d3d1c7;border-radius:12px;padding:1rem 1.1rem;margin-bottom:.9rem}
+.gps-situation{font-size:.9rem;color:#2c2c2a;margin-bottom:.7rem;line-height:1.5}
+.gps-situation strong{color:#185FA5}
+.gps-options{display:flex;flex-direction:column;gap:.4rem}
+.gps-btn{padding:.45rem .9rem;border-radius:8px;border:1.5px solid #d3d1c7;background:#fff;color:#2c2c2a;font-size:.87rem;text-align:left;cursor:pointer;font-family:'Lato',sans-serif;transition:all .15s;line-height:1.4}
+.gps-btn:hover{border-color:#185FA5;background:#E6F1FB}
+.gps-btn.correct{background:#eaf3de;border-color:#3B6D11;color:#27500A;pointer-events:none}
+.gps-btn.wrong{background:#fcebeb;border-color:#A32D2D;color:#A32D2D;pointer-events:none}
+.gps-exp{font-size:.78rem;color:#5f5e5a;font-style:italic;margin-top:.5rem;display:none;line-height:1.4}
+
+/* A2 — Complete o diálogo */
+.dialogo-wrap{margin-bottom:.8rem}
+.balao{max-width:82%;padding:.55rem .9rem;border-radius:14px;font-size:.88rem;line-height:1.5;margin-bottom:.4rem}
+.balao.esq{background:#E6F1FB;color:#2c2c2a;border-radius:4px 14px 14px 14px;border:1px solid #B5D4F4}
+.balao.dir{background:#eaf3de;color:#2c2c2a;border-radius:14px 4px 14px 14px;margin-left:auto;border:1px solid #C0DD97}
+.balao .who{font-size:.7rem;font-weight:700;color:#888780;margin-bottom:2px}
+.lacuna-sel{display:inline-block;min-width:130px;border-bottom:2px solid #b4b2a9;padding:0 6px;text-align:center;cursor:pointer;font-weight:700;color:transparent;background:#f1efe8;border-radius:4px;margin:0 4px;transition:all .2s;vertical-align:bottom}
+.lacuna-sel.preenchida{color:#2c2c2a;border-color:#185FA5;background:#E6F1FB}
+.lacuna-sel.certa{color:#27500A;border-color:#3B6D11;background:#eaf3de}
+.lacuna-sel.errada{color:#A32D2D;border-color:#A32D2D;background:#fcebeb}
+.opcoes-dial{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.9rem;padding:.7rem .9rem;background:#f7f5ef;border-radius:10px;border:1px solid #d3d1c7}
+.chip-dial{padding:.25rem .75rem;border-radius:20px;border:1.5px solid #185FA5;background:#E6F1FB;color:#0c447c;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .15s;user-select:none}
+.chip-dial:hover{background:#185FA5;color:#fff}
+.chip-dial.used{opacity:.3;pointer-events:none}
+.chip-dial.selected{background:#185FA5;color:#fff}
+
+/* A3 — Intruso */
+.intrus-g{margin-bottom:1.1rem;padding:.85rem 1rem;background:#f7f5ef;border-radius:10px;border:1px solid #d3d1c7}
+.intrus-lbl{font-size:.76rem;font-weight:700;color:#888780;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem}
+.intrus-row{display:flex;flex-wrap:wrap;gap:.45rem}
+.intrus-btn{padding:.3rem .8rem;border-radius:8px;border:1.5px solid #d3d1c7;background:#fff;color:#2c2c2a;font-size:.85rem;cursor:pointer;font-family:'Lato',sans-serif;transition:all .15s}
+.intrus-btn:hover{border-color:#185FA5;background:#E6F1FB}
+.intrus-btn.correct{background:#eaf3de;border-color:#3B6D11;color:#27500A;pointer-events:none}
+.intrus-btn.wrong{background:#fcebeb;border-color:#A32D2D;color:#A32D2D;pointer-events:none}
+.intrus-exp{font-size:.78rem;color:#5f5e5a;font-style:italic;margin-top:.5rem;display:none}
+
+/* A4 — Vrai/Faux */
+.vf-item{background:#f7f5ef;border:1px solid #d3d1c7;border-radius:10px;padding:.85rem 1rem;margin-bottom:.7rem;display:flex;gap:.9rem;align-items:flex-start}
+.vf-txt{flex:1;font-size:.9rem;line-height:1.55;color:#2c2c2a}
+.vf-exp{font-size:.79rem;color:#5f5e5a;font-style:italic;margin-top:.4rem;line-height:1.4;display:none}
+.vf-btns{display:flex;gap:.4rem;flex-shrink:0;padding-top:2px}
+.vf-btn{padding:.32rem .7rem;border-radius:6px;border:1.5px solid #b4b2a9;font-size:.82rem;font-weight:700;cursor:pointer;background:#f1efe8;color:#5f5e5a;font-family:'Lato',sans-serif;transition:all .15s}
+.vf-btn:hover{background:#d3d1c7;color:#2c2c2a}
+.vf-btn.vs{background:#eaf3de;color:#27500A;border-color:#3B6D11}
+.vf-btn.fs{background:#fcebeb;color:#501313;border-color:#A32D2D}
+.vf-btn.cv{background:#eaf3de;color:#27500A;border-color:#3B6D11}
+.vf-btn.cf{background:#fcebeb;color:#501313;border-color:#A32D2D}
+
+/* A5 — Production écrite */
+.scenario-box{background:#E6F1FB;border-left:4px solid #185FA5;border-radius:0 10px 10px 0;padding:.85rem 1rem;margin-bottom:.9rem;font-size:.88rem;color:#2c2c2a;line-height:1.55}
+.scenario-box strong{color:#185FA5}
+.write-area{width:100%;min-height:120px;padding:.7rem .9rem;border:1.5px solid #d3d1c7;border-radius:10px;font-size:.9rem;font-family:'Lato',sans-serif;color:#2c2c2a;background:#fff;resize:vertical;line-height:1.6;transition:border-color .2s}
+.write-area:focus{outline:none;border-color:#185FA5}
+.starters{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.7rem}
+.starter{padding:.22rem .65rem;border-radius:20px;border:1px solid #185FA5;background:#E6F1FB;color:#0c447c;font-size:.76rem;font-weight:700;cursor:pointer;transition:all .15s}
+.starter:hover{background:#185FA5;color:#fff}
+.wc{font-size:.76rem;color:#888780;text-align:right;margin-top:.3rem}
+
+/* Resultado */
+.res-card{background:#fff;border:1px solid #d3d1c7;border-radius:14px;padding:2rem 1.5rem;text-align:center}
+.res-score{font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;color:#2c2c2a;margin-bottom:.3rem}
+.res-msg{font-size:.95rem;color:#5f5e5a;margin-bottom:1.5rem}
+.res-grid{display:flex;justify-content:center;gap:.7rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.res-item{background:#f7f5ef;border-radius:10px;padding:.6rem 1rem;font-size:.8rem;color:#5f5e5a;min-width:110px;text-align:center}
+.res-item strong{display:block;font-size:1.1rem;color:#2c2c2a;margin-bottom:2px}
+.reflexao{background:#E6F1FB;border-left:4px solid #185FA5;border-radius:0 10px 10px 0;padding:.9rem 1.1rem;font-size:.85rem;color:#0c447c;line-height:1.6;text-align:left;max-width:520px;margin:0 auto 1.5rem}
+.reflexao strong{color:#042C53}
+#f1,#f2,#f3,#f4,#f5,#resultado{display:none}
+</style>
+</head>
+<body>
+<div id="app">
+<div class="app-header">
+  <div class="app-brand">Lusofala©</div>
+  <div class="app-title">Os Transportes e a Cidade</div>
+  <div class="app-sub">Módulo 4 — 5 atividades interativas — Nível B1</div>
+</div>
+<div class="prog-wrap">
+  <div>Atividade <strong id="nf">1</strong> de 5</div>
+  <div class="prog-dots" id="dots"></div>
+  <div>Pontos: <strong id="pts">0</strong></div>
+</div>
+
+<!-- A1 — GPS: escolha a instrução certa -->
+<div id="f1">
+<div class="act-card">
+  <div class="act-badge" style="background:#E6F1FB;color:#0c447c">Atividade 1 — GPS interativo</div>
+  <div class="act-title">Escolha a instrução correta!</div>
+  <div class="act-inst">Leia cada situação e escolha a instrução GPS mais adequada em português. Uma só está correta!</div>
+  <div id="gps-list"></div>
+  <div class="feedback" id="fb1"></div>
+  <div class="btn-row"><button class="btn primary" id="btn1" onclick="checkA1()">Verificar →</button></div>
+</div>
+</div>
+
+<!-- A2 — Complete o diálogo -->
+<div id="f2">
+<div class="act-card">
+  <div class="act-badge" style="background:#FAEEDA;color:#633806">Atividade 2 — Complete o diálogo</div>
+  <div class="act-title">No metrô: pedindo informações</div>
+  <div class="act-inst">Selecione uma expressão do banco e clique na lacuna correspondente para completar o diálogo.</div>
+  <div class="opcoes-dial" id="banco2"></div>
+  <div id="dialogo2"></div>
+  <div class="feedback" id="fb2"></div>
+  <div class="btn-row"><button class="btn primary" id="btn2" onclick="checkA2()">Verificar →</button></div>
+</div>
+</div>
+
+<!-- A3 — Intruso -->
+<div id="f3">
+<div class="act-card">
+  <div class="act-badge" style="background:#eaf3de;color:#27500A">Atividade 3 — Encontre o intruso</div>
+  <div class="act-title">Qual não pertence ao grupo?</div>
+  <div class="act-inst">Em cada grupo de palavras, uma não tem relação com as outras. Clique no intruso!</div>
+  <div id="a3-list"></div>
+  <div class="feedback" id="fb3"></div>
+  <div class="btn-row"><button class="btn primary" id="btn3" onclick="checkA3()">Verificar →</button></div>
+</div>
+</div>
+
+<!-- A4 — V/F -->
+<div id="f4">
+<div class="act-card">
+  <div class="act-badge" style="background:#FBEAF0;color:#72243E">Atividade 4 — Verdadeiro ou Falso?</div>
+  <div class="act-title">Mobilidade urbana: verdade ou mito?</div>
+  <div class="act-inst">Cada afirmação é sobre os transportes no Brasil ou na França. Indique se é <strong>Verdadeiro (V)</strong> ou <strong>Falso (F)</strong>.</div>
+  <div id="a4-list"></div>
+  <div class="feedback" id="fb4"></div>
+  <div class="btn-row"><button class="btn primary" id="btn4" onclick="checkA4()">Verificar →</button></div>
+</div>
+</div>
+
+<!-- A5 — Production écrite -->
+<div id="f5">
+<div class="act-card">
+  <div class="act-badge" style="background:#f1efe8;color:#5F5E5A">Atividade 5 — Produza um texto</div>
+  <div class="act-title">Escreva sobre a mobilidade!</div>
+  <div class="act-inst">Leia a situação e escreva uma resposta de <strong>40 a 60 palavras</strong>. Use os inícios de frases sugeridos.</div>
+  <div class="scenario-box" id="a5-scene"></div>
+  <div style="font-size:.82rem;color:#5f5e5a;margin-bottom:.5rem">Inícios de frases (clique para inserir):</div>
+  <div class="starters" id="starters5"></div>
+  <textarea class="write-area" id="wt5" placeholder="Escreva aqui..." oninput="updateWC5()"></textarea>
+  <div class="wc" id="wc5">0 palavras</div>
+  <div class="feedback" id="fb5"></div>
+  <div class="btn-row"><button class="btn primary" id="btn5" onclick="checkA5()">Ver resultado →</button></div>
+</div>
+</div>
+
+<!-- Resultado -->
+<div id="resultado">
+<div class="res-card">
+  <div class="res-score" id="rscore"></div>
+  <div class="res-msg" id="rmsg"></div>
+  <div class="res-grid" id="rgrid"></div>
+  <div class="reflexao"><strong>Para ir mais longe:</strong><br>Descreva como você vai de casa até a escola ou o trabalho. Use: <em>"Eu saio de casa às… Primeiro, eu pego o/a… Depois, eu… O trajeto dura… Eu prefiro esse meio de transporte porque…"</em></div>
+  <button class="btn primary" onclick="reiniciar()">Jogar novamente</button>
+</div>
+</div>
+</div>
+
+<script>
+var pts=0, scores=['—','—','—','—','—'], palavraSel=null;
+var a3Sel={}, a4Sel={};
+
+// ── DADOS ──
+
+var A1GPS=[
+  {sit:'Você está na <strong>Avenida Paulista</strong> e quer chegar à <strong>Praça da Sé</strong>. O metrô fica a 200 metros.',
+   ops:[
+     {t:'"Vire à esquerda, depois pegue o metrô até a Sé."',ok:true,e:'Correto! Essa instrução é clara, usa o vocabulário de direções e indica o meio de transporte correto.'},
+     {t:'"Você está perdido/a. Procure um mapa."',ok:false,e:'Isso não ajuda! Uma instrução GPS deve indicar o caminho, não expressar confusão.'},
+     {t:'"A Praça da Sé fica em Portugal."',ok:false,e:'Falso! A Praça da Sé é um ponto famoso no centro de São Paulo, Brasil.'},
+   ]},
+  {sit:'Um turista pergunta: <strong>"Como chego ao Museu do Louvre?"</strong> Ele está a pé na estação de metrô Palais-Royal.',
+   ops:[
+     {t:'"Fique aqui, o Louvre não existe."',ok:false,e:'O Museu do Louvre existe e fica a apenas 1 minuto a pé da estação Palais-Royal!'},
+     {t:'"Saia pela saída Richelieu, vire à esquerda e siga em frente por 2 minutos."',ok:true,e:'Perfeito! Instrução clara com referência de saída, direção e tempo estimado.'},
+     {t:'"O Louvre fica longe, você precisa de carro."',ok:false,e:'Incorreto! O Louvre fica a menos de 2 minutos a pé da estação Palais-Royal.'},
+   ]},
+  {sit:'Você está dirigindo e o GPS diz: <strong>"Em 300 metros, entre na segunda rua à direita"</strong>. O que você deve fazer?',
+   ops:[
+     {t:'Virar na primeira rua à direita imediatamente.',ok:false,e:'Não! O GPS indicou a segunda rua. É preciso passar pela primeira e virar na segunda.'},
+     {t:'Continuar por 300 metros e depois virar na segunda rua à direita.',ok:true,e:'Correto! Você deve respeitar a distância indicada e contar as ruas.'},
+     {t:'Parar o carro e esperar.',ok:false,e:'Parar o carro no meio da rua sem motivo não é uma instrução de navegação adequada!'},
+   ]},
+];
+
+var A2BANCO=['Com licença','onde fica','como eu chego','obrigada','baldeio','em frente'];
+var A2LINHAS=[
+  {who:'Clara (turista)',dir:'esq',txt:'',lacuna:{id:'l1',r:'Com licença'},pos:'antes',resto:'! Poderia me ajudar?'},
+  {who:'Passageiro',dir:'dir',txt:'Claro! O que você precisa?',lacuna:null},
+  {who:'Clara',dir:'esq',txt:'',lacuna:{id:'l2',r:'como eu chego'},pos:'antes',resto:' à estação Central?'},
+  {who:'Passageiro',dir:'dir',txt:'Você pega a linha azul e faz ',lacuna:{id:'l3',r:'baldeio'},pos:'meio',ante:'Você pega a linha azul e faz ',resto:' na estação República.'},
+  {who:'Clara',dir:'esq',txt:'E a estação República fica ',lacuna:{id:'l4',r:'em frente'},pos:'meio',ante:'E a estação República fica ',resto:' à saída B?'},
+  {who:'Passageiro',dir:'dir',txt:'Exato! Não tem como errar.',lacuna:null},
+  {who:'Clara',dir:'esq',txt:'Muito ',lacuna:{id:'l5',r:'obrigada'},pos:'meio',ante:'Muito ',resto:'! Você foi muito gentil.'},
+];
+
+var A3G=[
+  {l:'Meios de transporte',its:['ônibus','metrô','calçada','bicicleta','carro'],x:'calçada',e:'A calçada é onde as pessoas caminham — não é um meio de transporte. Os outros são todos veículos.'},
+  {l:'Instruções para dar direções',its:['vire à direita','siga em frente','pegue o semáforo','vá reto','fique na segunda rua'],x:'pegue o semáforo',e:'Não se "pega" um semáforo — é um objeto fixo. As outras expressões são instruções de direção corretas.'},
+  {l:'Problemas de trânsito',its:['engarrafamento','congestionamento','hora de pico','ciclovia','acidente'],x:'ciclovia',e:'A ciclovia é uma solução de mobilidade sustentável — não é um problema de trânsito. Os outros são todos problemas ou situações difíceis no tráfego.'},
+  {l:'Partes de uma cidade',its:['esquina','cruzamento','calçada','passageiro','avenida'],x:'passageiro',e:'Passageiro é uma pessoa (que usa transporte) — não é uma parte da cidade. Os outros são todos elementos da estrutura urbana.'},
+];
+
+var A4VF=[
+  {txt:'No Brasil, o rodízio de veículos proíbe a circulação de certos carros em determinados dias, de acordo com o final da placa.',resp:true,exp:'Verdadeiro! O rodízio de veículos existe em São Paulo e funciona exatamente assim — cada número de placa tem um dia restrito.'},
+  {txt:'O metrô de Paris tem mais de 1.000 estações.',resp:false,exp:'Falso. O metrô de Paris tem pouco mais de 300 estações — mas é de fato um dos mais extensos do mundo!'},
+  {txt:'No Brasil, o mototáxi é um serviço de transporte em motocicleta muito comum no Nordeste e no interior.',resp:true,exp:'Verdadeiro! O mototáxi é uma solução de transporte popular em regiões onde os transportes coletivos são menos presentes.'},
+  {txt:'"Pegar um trânsito" em português do Brasil significa comprar um bilhete de metrô.',resp:false,exp:'Falso! "Pegar um trânsito" significa encontrar tráfego intenso. Por exemplo: "Demorei 2 horas porque peguei um trânsito terrível!"'},
+  {txt:'A "cidade dos 15 minutos" é um conceito onde todos os serviços essenciais ficam a menos de 15 minutos a pé ou de bicicleta.',resp:true,exp:'Verdadeiro! É um conceito de urbanismo sustentável que está sendo implementado em Paris e em várias cidades brasileiras.'},
+  {txt:'Em Paris, diz-se "il y a des bouchons" para falar de trânsito intenso. "Bouchon" significa "rolha".',resp:true,exp:'Verdadeiro! A imagem é a de carros engarrafados como rolhas numa garrafa. É uma expressão colorida e muito usada!'},
+];
+
+var A5SCENE='<strong>Situação:</strong> O seu amigo francês, Théo, vai visitar São Paulo pela primeira vez. Ele te pergunta por mensagem: <em>"Como me deslocar na cidade? Devo alugar um carro ou usar o transporte público?"</em> Escreva uma resposta dando conselhos práticos.';
+var A5STARTS=['Eu te aconselho a…','Em São Paulo, o melhor meio de transporte é…','O trânsito em São Paulo é…','Para evitar o engarrafamento, você deve…','O metrô de São Paulo…','A diferença entre São Paulo e Paris é que…'];
+
+// ── INIT ──
+function init(){
+  var d=document.getElementById('dots');d.innerHTML='';
+  for(var i=1;i<=5;i++){var dd=document.createElement('div');dd.className='prog-dot'+(i===1?' active':'');dd.id='dot'+i;d.appendChild(dd);}
+  buildA1();buildA2();buildA3();buildA4();buildA5();show(1);
+}
+function show(n){
+  ['f1','f2','f3','f4','f5','resultado'].forEach(function(id){document.getElementById(id).style.display='none';});
+  if(n<=5)document.getElementById('f'+n).style.display='block';
+  else document.getElementById('resultado').style.display='block';
+  document.getElementById('nf').textContent=Math.min(n,5);
+  document.getElementById('pts').textContent=pts;
+  for(var i=1;i<=5;i++){var d=document.getElementById('dot'+i);d.className='prog-dot'+(i<n?' done':i===n?' active':'');}
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── A1 ──
+var a1Resp={};
+function buildA1(){
+  var c=document.getElementById('gps-list');c.innerHTML='';
+  A1GPS.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='gps-step';
+    div.innerHTML='<div class="gps-situation">'+item.sit+'</div><div class="gps-options" id="gps'+qi+'"></div><div class="gps-exp" id="ge'+qi+'"></div>';
+    c.appendChild(div);
+    var opts=document.getElementById('gps'+qi);
+    item.ops.forEach(function(op,oi){
+      var b=document.createElement('button');b.className='gps-btn';b.textContent=op.t;
+      b.onclick=function(){
+        document.querySelectorAll('#gps'+qi+' .gps-btn').forEach(function(x){x.classList.remove('correct','wrong');x.style.pointerEvents='none';});
+        b.className='gps-btn '+(op.ok?'correct':'wrong');
+        if(!op.ok)item.ops.forEach(function(o){if(o.ok)document.querySelectorAll('#gps'+qi+' .gps-btn').forEach(function(x){if(x.textContent===o.t)x.className='gps-btn correct';});});
+        var e=document.getElementById('ge'+qi);e.textContent=op.e;e.style.display='block';
+        a1Resp[qi]=op.ok;
+      };
+      opts.appendChild(b);
+    });
+  });
+}
+function checkA1(){
+  var ok=0;A1GPS.forEach(function(_,i){if(a1Resp[i])ok++;});
+  var p=ok*15;pts+=p;scores[0]=ok+'/'+A1GPS.length+' ('+p+' pts)';
+  document.getElementById('pts').textContent=pts;
+  var fb=document.getElementById('fb1');fb.className='feedback '+(ok===A1GPS.length?'ok':'info');
+  fb.textContent=ok+'/'+A1GPS.length+' corretas! +'+p+' pts.';
+  var b=document.getElementById('btn1');b.textContent='Próxima atividade →';b.onclick=function(){show(2);};
+}
+
+// ── A2 ──
+function buildA2(){
+  var banco=document.getElementById('banco2');banco.innerHTML='';
+  A2BANCO.forEach(function(w){
+    var c=document.createElement('span');c.className='chip-dial';c.textContent=w;c.dataset.w=w;
+    c.onclick=function(){
+      document.querySelectorAll('.chip-dial').forEach(function(x){x.classList.remove('selected');});
+      c.classList.add('selected');palavraSel=c;
+    };
+    banco.appendChild(c);
+  });
+  var cont=document.getElementById('dialogo2');cont.innerHTML='';
+  A2LINHAS.forEach(function(linha){
+    var bDiv=document.createElement('div');
+    bDiv.className='balao '+(linha.dir==='esq'?'esq':'dir');
+    var html='<div class="who">'+linha.who+'</div>';
+    if(linha.lacuna){
+      if(linha.pos==='antes'){
+        html+='<span class="lacuna-sel" id="'+linha.lacuna.id+'" data-r="'+linha.lacuna.r+'" onclick="fillLacuna(\''+linha.lacuna.id+'\')">'+Array(8).join('&nbsp;')+'</span>'+linha.resto;
+      } else {
+        html+=linha.ante+'<span class="lacuna-sel" id="'+linha.lacuna.id+'" data-r="'+linha.lacuna.r+'" onclick="fillLacuna(\''+linha.lacuna.id+'\')">'+Array(8).join('&nbsp;')+'</span>'+linha.resto;
+      }
+    } else { html+=linha.txt; }
+    bDiv.innerHTML=html;
+    cont.appendChild(bDiv);
+  });
+}
+function fillLacuna(id){
+  if(!palavraSel){var fb=document.getElementById('fb2');fb.className='feedback info';fb.textContent='Selecione primeiro uma expressão do banco!';return;}
+  var lac=document.getElementById(id);
+  var prev=lac.dataset.de;
+  if(prev){var ant=document.querySelector('.chip-dial[data-w="'+prev+'"]');if(ant)ant.classList.remove('used');}
+  lac.textContent=palavraSel.dataset.w;lac.className='lacuna-sel preenchida';lac.dataset.de=palavraSel.dataset.w;
+  palavraSel.classList.add('used');palavraSel.classList.remove('selected');palavraSel=null;
+  document.getElementById('fb2').textContent='';
+}
+function checkA2(){
+  var ok=0,total=0;
+  document.querySelectorAll('.lacuna-sel').forEach(function(lac){
+    total++;var v=lac.textContent.trim();
+    if(v===lac.dataset.r){lac.className='lacuna-sel certa';ok++;}
+    else{lac.className='lacuna-sel errada';if(!v||v.indexOf('\u00a0')>-1)lac.textContent='???';}
+  });
+  var p=ok*14;pts+=p;scores[1]=ok+'/'+total+' ('+p+' pts)';
+  document.getElementById('pts').textContent=pts;
+  var fb=document.getElementById('fb2');fb.className='feedback '+(ok===total?'ok':'info');
+  fb.textContent=ok+'/'+total+' corretas! +'+p+' pts.';
+  var b=document.getElementById('btn2');b.textContent='Próxima atividade →';b.onclick=function(){show(3);};
+}
+
+// ── A3 ──
+function buildA3(){
+  var c=document.getElementById('a3-list');c.innerHTML='';
+  A3G.forEach(function(g,gi){
+    var div=document.createElement('div');div.className='intrus-g';
+    div.innerHTML='<div class="intrus-lbl">Grupo '+(gi+1)+' — '+g.l+'</div><div class="intrus-row" id="ig'+gi+'"></div><div class="intrus-exp" id="ie'+gi+'"></div>';
+    c.appendChild(div);
+    g.its.forEach(function(item){
+      var b=document.createElement('button');b.className='intrus-btn';b.textContent=item;
+      b.onclick=function(){
+        document.querySelectorAll('#ig'+gi+' .intrus-btn').forEach(function(x){x.style.pointerEvents='none';});
+        var isOk=item===g.x;b.className='intrus-btn '+(isOk?'correct':'wrong');
+        if(!isOk)document.querySelectorAll('#ig'+gi+' .intrus-btn').forEach(function(x){if(x.textContent===g.x)x.className='intrus-btn correct';});
+        a3Sel[gi]=isOk;
+        var e=document.getElementById('ie'+gi);e.textContent=g.e;e.style.display='block';
+      };
+      document.getElementById('ig'+gi).appendChild(b);
+    });
+  });
+}
+function checkA3(){
+  var ok=0;A3G.forEach(function(_,i){if(a3Sel[i])ok++;});
+  var p=ok*15;pts+=p;scores[2]=ok+'/'+A3G.length+' ('+p+' pts)';
+  document.getElementById('pts').textContent=pts;
+  var fb=document.getElementById('fb3');fb.className='feedback '+(ok===A3G.length?'ok':'info');
+  fb.textContent=ok+'/'+A3G.length+' corretos! +'+p+' pts.';
+  var b=document.getElementById('btn3');b.textContent='Próxima atividade →';b.onclick=function(){show(4);};
+}
+
+// ── A4 ──
+function buildA4(){
+  var c=document.getElementById('a4-list');c.innerHTML='';
+  A4VF.forEach(function(item,i){
+    var div=document.createElement('div');div.className='vf-item';div.dataset.id=i;
+    div.innerHTML='<div class="vf-txt">'+item.txt+'<div class="vf-exp" id="ve'+i+'"></div></div>'
+      +'<div class="vf-btns"><button class="vf-btn" id="vv'+i+'" onclick="pickVF('+i+',true)">V</button>'
+      +'<button class="vf-btn" id="vf'+i+'" onclick="pickVF('+i+',false)">F</button></div>';
+    c.appendChild(div);
+  });
+}
+function pickVF(i,v){
+  var bv=document.getElementById('vv'+i),bf=document.getElementById('vf'+i);
+  bv.classList.remove('vs','fs');bf.classList.remove('vs','fs');
+  if(v)bv.classList.add('vs');else bf.classList.add('fs');
+  a4Sel[i]=v;
+}
+function checkA4(){
+  var ok=0;
+  A4VF.forEach(function(item,i){
+    var bv=document.getElementById('vv'+i),bf=document.getElementById('vf'+i);
+    var e=document.getElementById('ve'+i);
+    bv.classList.remove('vs','fs');bf.classList.remove('vs','fs');bv.disabled=true;bf.disabled=true;
+    if(a4Sel[i]===undefined){if(e){e.textContent='Não respondido. '+item.exp;e.style.display='block';}return;}
+    var isOk=a4Sel[i]===item.resp;if(isOk)ok++;
+    if(isOk){if(item.resp)bv.className='vf-btn cv';else bf.className='vf-btn cf';}
+    else{if(a4Sel[i])bv.className='vf-btn fs';else bf.className='vf-btn fs';if(item.resp)bv.className='vf-btn cv';else bf.className='vf-btn cf';}
+    if(e){e.textContent=item.exp;e.style.display='block';}
+  });
+  var p=ok*10;pts+=p;scores[3]=ok+'/'+A4VF.length+' ('+p+' pts)';
+  document.getElementById('pts').textContent=pts;
+  var fb=document.getElementById('fb4');fb.className='feedback '+(ok===A4VF.length?'ok':'info');
+  fb.textContent=ok+'/'+A4VF.length+' corretas! +'+p+' pts.';
+  var b=document.getElementById('btn4');b.textContent='Próxima atividade →';b.onclick=function(){show(5);};
+}
+
+// ── A5 ──
+function buildA5(){
+  document.getElementById('a5-scene').innerHTML=A5SCENE;
+  var bar=document.getElementById('starters5');bar.innerHTML='';
+  A5STARTS.forEach(function(s){
+    var c=document.createElement('span');c.className='starter';c.textContent=s;
+    c.onclick=function(){
+      var ta=document.getElementById('wt5');var v=ta.value;var p=ta.selectionStart;
+      ta.value=v.slice(0,p)+(v.length>0&&v[v.length-1]!==' '?' ':'')+s+' '+v.slice(p);
+      ta.focus();updateWC5();
+    };
+    bar.appendChild(c);
+  });
+}
+function updateWC5(){
+  var v=document.getElementById('wt5').value.trim();var n=v?v.split(/\s+/).length:0;
+  var el=document.getElementById('wc5');el.textContent=n+' palavras';
+  el.style.color=n>=40&&n<=70?'#27500A':n>0?'#BA7517':'#888780';
+}
+function checkA5(){
+  var v=document.getElementById('wt5').value.trim();var n=v?v.split(/\s+/).length:0;
+  if(n<15){var fb=document.getElementById('fb5');fb.className='feedback err';fb.textContent='Escreva pelo menos 15 palavras para continuar.';return;}
+  var p=n>=40?25:n>=25?15:8;pts+=p;scores[4]=n+' palavras (+'+p+' pts)';
+  document.getElementById('pts').textContent=pts;
+  var fb=document.getElementById('fb5');fb.className='feedback ok';fb.textContent='Texto registrado com '+n+' palavras. +'+p+' pts!';
+  var b=document.getElementById('btn5');b.textContent='Ver resultado →';b.onclick=showResult;
+}
+
+// ── RESULTADO ──
+function showResult(){
+  var maxPts=45+70+60+60+25;var pct=Math.round((pts/maxPts)*100);
+  document.getElementById('rscore').textContent=pts+' pts ('+pct+'%)';
+  var msgs=['Continue praticando — o vocabulário dos transportes é muito útil!','Bom trabalho! Você já se orienta bem nas cidades brasileiras.','Muito bem! Você domina o vocabulário de transportes e direções.','Excelente! Você navegaria sem problemas em São Paulo ou Paris!'];
+  document.getElementById('rmsg').textContent=msgs[pct>=85?3:pct>=65?2:pct>=45?1:0];
+  var labs=['GPS','Diálogo','Intruso','V ou F','Produção'];
+  var grid=document.getElementById('rgrid');grid.innerHTML='';
+  scores.forEach(function(s,i){var d=document.createElement('div');d.className='res-item';d.innerHTML='<strong>'+s+'</strong>'+labs[i];grid.appendChild(d);});
+  show(6);
+}
+
+function reiniciar(){
+  pts=0;scores=['—','—','—','—','—'];a3Sel={};a4Sel={};palavraSel=null;
+  document.getElementById('wt5').value='';document.getElementById('wc5').textContent='0 palavras';
+  buildA1();buildA2();buildA3();buildA4();buildA5();init();
+}
+
+init();
+</script>
+</body>
+</html>
